@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="Kostiantyn Shevtsov" />
+    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+    <!-- CSS only from bootstrap-->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT"
+      crossorigin="anonymous"
+    />
+    <title>Events</title>
+    <style>
+        .wrapper {
+            padding: 10px;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Events</h1>
+        <hr />
+      </header>
+      <main>
+        <div class="wrapper">
+          <span>Sort by:</span>
+          <select id="sort">
+            <option value="1">Name</option>
+            <option value="2">Event name</option>
+            <option selected="" value="3">Date</option>
+          </select>
+        </div>
+        <div class="container-fluid mt-2">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Event name</th>
+                <th scope="col">Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>10.01.2022</td>
+              </tr>
+              <tr>
+                <th scope="row">2</th>
+                <td>Jacob</td>
+                <td>Thornton</td>
+                <td>12.02.2022</td>
+              </tr>
+              <tr>
+                <th scope="row">3</th>
+                <td>Larry</td>
+                <td>the Bird</td>
+                <td>14.02.2022</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <span>The total price of all filtered entries:</span>
+          <span id="total">202</span>
+          <span> $</span>
+        </div>
+      </main>
+    </div>
+    <script src="js/main.js"></script>
+  </body>
+</html>
