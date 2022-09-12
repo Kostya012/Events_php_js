@@ -3,136 +3,102 @@ sort.addEventListener('change', getData);
 
 let url = "events.php";
 
-// getData();
-async function getData() {
+getData();
+function getData() {
     let info = sort.value;
-    console.log('info :>> ', info);
     try {
-        const response = await fetch(url, {
+        fetch(url, {
             method: 'POST',
             body: JSON.stringify(info),
             headers: {
                 'Content-Type': 'application/json'
             }
-        });
-        const json = await response.json();
-        // console.log('Успех:', JSON.stringify(json));
-        let res = JSON.stringify(json);
-        console.log('res :>> ', res);
-        if (sort.value == 3) {
-            showTable(res);
-        } else if (sort.value == 2) {
-            showTable(res.sort(function (a, b) {
-                if (a.event > b.event) {
-                    return 1;
+        })
+            .then(function (response) { return response.json() })
+            .then((res) => {
+                if (sort.value == 3) {
+                    showTable(res);
+                } else if (sort.value == 2) {
+                    res.sort(function (a, b) {
+                        if (a.event > b.event) {
+                            return 1;
+                        }
+                        if (a.event < b.event) {
+                            return -1;
+                        }
+                        return 0;
+                    });
+                    showTable(res);
+                } else if (sort.value == 1) {
+                    res.sort(function (a, b) {
+                        if (a.name > b.name) {
+                            return 1;
+                        }
+                        if (a.name < b.name) {
+                            return -1;
+                        }
+                        return 0;
+                    });
+                    showTable(res);
                 }
-                if (a.event < b.event) {
-                    return -1;
-                }
-                return 0;
-            }));
-        } else if (sort.value == 1) {
-            showTable(res.sort(function (a, b) {
-                if (a.name > b.name) {
-                    return 1;
-                }
-                if (a.name < b.name) {
-                    return -1;
-                }
-                return 0;
-            }));
-        }
+            });
     } catch (error) {
         console.error('Error:', error);
     }
 }
 
 function showTable(res) {
-    console.log('res2 :>> ', res);
+    let result = document.getElementById('result');
+    result.innerHTML = "";
+    let resLength = res.length;
+    if (resLength > 0) {
+        let arrThead = ['#', 'Name', 'Event name', 'Date'];
+        let arrTheadLength = arrThead.length;
+        let table = document.createElement("table");
+        table.className = "table";
+        let thead = document.createElement("thead");
+        let tbody = document.createElement("tbody");
+        let trThead = document.createElement("tr");
+        for (let i = 0; i < arrTheadLength; i++) {
+            let th = document.createElement("th");
+            th.setAttribute("scope", "col");
+            th.innerText = arrThead[i];
+            trThead.append(th);
+        }
+        thead.append(trThead);
+        table.append(thead);
+        let resFields = ['name', 'event', 'data', 'price'];
+        let totalPrice = 0;
+        let resFieldsLength = resFields.length;
+        loop1:
+        for (let i = 0; i < resLength; i++) {
+            let tr = document.createElement("tr");
+            loop2:
+            for (let j = 0; j <= resFieldsLength; j++) {
+                if (j == 0) {
+                    let th = document.createElement("th");
+                    th.setAttribute("scope", "row");
+                    th.innerText = i + 1;
+                    tr.append(th);
+                    continue loop2;
+                } else if (j == resFieldsLength) {
+                    totalPrice += +res[i][`${resFields[j - 1]}`];
+                    tbody.append(tr);
+                    continue loop1;
+                }
+                let td = document.createElement("td");
+                td.innerText = res[i][`${resFields[j - 1]}`];
+                tr.append(td);
+            }
+        }
+        table.append(tbody);
+        result.append(table);
+        let total = document.getElementById("total");
+        total.innerText = '';
+        total.innerText = `The total price of all filtered entries: ${totalPrice} $`;
+    } else {
+        let span = document.createElement("span");
+        span.innerText = 'No events';
+        result.append(span);
+    }
 }
-
-
-// fetch(url)
-//   .then(function(response) {
-//     return response.json();
-//   })
-//   .then(function(arr) {
-//     let table = document.createElement("table");
-//     table.id = "info-table";
-//     table.className = "table";
-//     let thead = document.createElement("thead");
-//     let tbody = document.createElement("tbody");
-//     for (let i = 0; i < 1; i++) {
-//       let tr = document.createElement("tr");
-//       for (let j = 0; j < arr[i].length - 1; j++) {
-//         let th = document.createElement("th");
-//         th.textContent = arr[i][j];
-//         tr.append(th);
-//         thead.append(tr);
-//         table.append(thead);
-//       }
-//       info.append(table);
-//     }
-//     for (let i = 1; i < arr.length; i++) {
-//       let tr = document.createElement("tr");
-//       let tr2 = document.createElement("tr");
-//       tr2.id = `t${i}`;
-//       tr2.className = "tr2";
-//       tr2.style.display = "none";
-//       let td2 = document.createElement("td");
-//       td2.setAttribute("colspan", arr[i].length);
-//       let ul = document.createElement("ul");
-//       let li = document.createElement("li");
-//       li.innerHTML = `День народження: <span class="fontWeight">${arr[i][8]} р.</span>`;
-//       ul.append(li);
-//       let li2 = document.createElement("li");
-//       let a = document.createElement("a");
-//       a.className = "linkPosad";
-//       let to = `./posadovi/${arr[i][1]}.docx`;
-//       a.setAttribute("href", to);
-//       a.innerText = `Посадова`;
-//       li2.append(a);
-//       ul.appendChild(li2);
-//       td2.append(ul);
-//       tr2.append(td2);
-//       for (let j = 0; j < arr[i].length - 1; j++) {
-//         let td = document.createElement("td");
-//         td.textContent = arr[i][j];
-//         tr.append(td);
-//       }
-//       tr.addEventListener("click", function() {
-//         let list = document.getElementById(`t${i}`);
-//         if (list.style.display == "") {
-//           list.style.display = "none";
-//         } else {
-//           list.style.display = "";
-//         }
-//       });
-//       tbody.append(tr);
-//       tbody.appendChild(tr2);
-//       table.appendChild(tbody);
-//       info.appendChild(table);
-//     }
-//     loader.style.display = "none";
-//     return arr;
-//   })
-//   .then(function(arr) {
-//     let mySearch = document.getElementById("mySearch");
-//     mySearch.addEventListener("input", function() {
-//       let infoTable = document.getElementById("info-table");
-//       var regPhrase = new RegExp(mySearch.value, "i");
-//       var flag = false;
-//       for (var i = 1; i < infoTable.rows.length; i++) {
-//         flag = false;
-//         for (var j = infoTable.rows[i].cells.length - 1; j >= 1; j--) {
-//           flag = regPhrase.test(infoTable.rows[i].cells[j].innerHTML);
-//           if (flag) break;
-//         }
-//         if (flag) {
-//           infoTable.rows[i].style.display = "";
-//         } else {
-//           infoTable.rows[i].style.display = "none";
-//         }
-//       }
-//     });
-//   });
